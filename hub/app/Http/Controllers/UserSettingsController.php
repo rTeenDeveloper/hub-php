@@ -9,7 +9,6 @@ use Validator;
 use Redirect;
 use Route;
 use Hash;
-use Markdown;
 
 class UserSettingsController extends Controller
 {
@@ -43,7 +42,7 @@ class UserSettingsController extends Controller
 
 		    	$user = User::find(Auth::id());
 		    	$user->name = $request->name;
-		    	$user->bio = Markdown::convertToHtml($request->bio);
+		    	$user->bio = $request->bio;
 		    	$user->save();
 
 		    	// A redirect here is necessary, because Laravel updates its Auth::user() data every request,
