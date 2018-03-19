@@ -47,13 +47,13 @@ jobs:
 
       - run:
          name: Update composer to latest version
-         command: composer self-update
+         command: cd hub; composer self-update
 
       - restore_cache:
           keys:
             - composer-v1-{{ checksum "composer.json" }}
             - composer-v1-
-      - run: composer install -n --prefer-dist --ignore-platform-reqs
+      - run: composer  cd hub; install -n --prefer-dist --ignore-platform-reqs
       - save_cache:
           key: composer-v1-{{ checksum "composer.json" }}
           paths:
