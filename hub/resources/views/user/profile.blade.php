@@ -9,5 +9,19 @@
 <span>joined {{$user['created_at']->diffForHumans()}}</span><br>
 
 <span>{{$user['bio']}}</span>
+
+<span>Followers: {{count($user->followers)}}</span>
+
+@if (Auth::id() != $user['id'])
+	<div id="follow-btn-container">
+		@if (Auth::user()->isFollowing($user['id']))
+			<div class="btn btn-primary" id="follow-btn" onclick="handleFollowBtn(false);">Unfollow</div>
+		@else 
+			<div class="btn btn-success" id="follow-btn" onclick="handleFollowBtn(true);">Follow</div>
+		@endif
+	</div> 
+@endif
 </div>
+
+<script src="/js/user_profile.js"></script>
 @endsection

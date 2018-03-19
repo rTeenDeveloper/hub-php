@@ -21,10 +21,20 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // User profiles
 
-Route::get('/user/{username}', [
-	'as' => 'user.profile',
-	'uses' => 'UserProfileController@index'
-]);
+Route::prefix('/user/{username}')->group(function(){
+	Route::get('/', [
+		'as' => 'user.profile',
+		'uses' => 'UserProfileController@index'
+	]);
+
+	Route::post('/follow', [
+		'uses' => 'UserProfileController@follow'
+	])->middleware('auth');
+
+	Route::post('/unfollow', [
+		'uses' => 'UserProfileController@unfollow'
+	])->middleware('auth');
+});
 
 Route::prefix('settings')->group(function(){
 
