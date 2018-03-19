@@ -31,7 +31,11 @@ jobs:
       - save_cache:
           paths:
             - ./vendor
-          key: v1-dependencies-{{ checksum "composer.json" }}
+          key: v1-dependencies-{{ checksum "composer.json" }}      
         
       # run tests!
       - run: phpunit
+
+test:
+  override:
+    - echo "done"
