@@ -18,3 +18,20 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// User profiles
+
+Route::get('/user/{username}', [
+	'as' => 'user.profile',
+	'uses' => 'UserProfileController@index'
+]);
+
+Route::get('settings', [
+	'as' => 'settings',
+	'uses' => 'UserSettingsController@index'
+])->middleware('auth');
+
+Route::post('settings', [
+	'as' => 'settings',
+	'uses' => 'UserSettingsController@update'
+])->middleware('auth');
