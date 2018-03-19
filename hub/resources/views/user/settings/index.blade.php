@@ -18,6 +18,20 @@
             </div>
         </div>
 
+        <div class="form-group{{ $errors->has('bio') ? ' has-error' : '' }}">
+            <label for="name" class="col-md-4 control-label">Bio</label>
+
+            <div class="col-md-6">
+                <textarea id="name" type="text" class="form-control" name="bio">{{ $user['bio'] }}</textarea>
+
+                @if ($errors->has('bio'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('bio') }}</strong>
+                    </span>
+                @endif
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
                 <button type="submit" class="btn btn-success">

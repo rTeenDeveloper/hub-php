@@ -2,10 +2,12 @@
 
 @section('content')
 <div class="container">
-<h1>{{$user['name']}}</h1>
+<h1>{{$user['name']}}</h1><br>
 
-<span>@</span><span>{{$user['username']}}</span>
+<span>@</span><span>{{$user['username']}}</span><br>
 
-<span>joined {{$user['created_at']->diffForHumans()}}</span>
+<span>joined {{$user['created_at']->diffForHumans()}}</span><br>
+
+<span>{{$user['bio']}}</span>
 </div>
 @endsection

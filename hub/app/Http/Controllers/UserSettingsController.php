@@ -9,6 +9,7 @@ use Validator;
 use Redirect;
 use Route;
 use Hash;
+use Markdown;
 
 class UserSettingsController extends Controller
 {
@@ -33,7 +34,8 @@ class UserSettingsController extends Controller
     	if (!isset($currentTab[1])) // 'profile' page
     	{
     			$validator = Validator::make($request->all(), [
-		    		'name' => 'required|string|max:255'
+		    		'name' => 'required|string|max:255',
+		    		'bio' => 'required|string|max:320'
 		    	]);
 
 		    	if ($validator->fails())
@@ -41,6 +43,7 @@ class UserSettingsController extends Controller
 
 		    	$user = User::find(Auth::id());
 		    	$user->name = $request->name;
+		    	$user->bio = Markdown::convertToHtml($request->bio);
 		    	$user->save();
 
 		    	// A redirect here is necessary, because Laravel updates its Auth::user() data every request,
