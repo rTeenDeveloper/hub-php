@@ -13,13 +13,11 @@ if you need to.
 
 ### Installing
 
-You will need composer and php installed.
+You will need composer and php installed. You can install composer using this [Tutorial](https://getcomposer.org/download).
 
 First, run in the hub directory:
 
-```
-composer install
-```
+`composer install` or if installed locally (installed from the page mentioned) `php composer.phar install` 
 
 This will install all required packages.
 
