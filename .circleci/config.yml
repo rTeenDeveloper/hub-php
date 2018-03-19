@@ -1,4 +1,5 @@
-# PHP CircleCI 2.0 configuration file
+# PHP CircleCI 2.0 configuration file for Laravel 5.5 and Laravel Dusk by Wes Mahler
+# Author wesmahler.com
 #
 # Check https://circleci.com/docs/2.0/language-php/ for more details
 #
@@ -42,7 +43,7 @@ jobs:
 
       - run:
          name: Setup Laravel testing environment variables for CircleCI test
-         command: cd ../hub && cp .env.testing .env
+         command: cp .env.testing .env
 
       - run:
          name: Update composer to latest version
@@ -58,6 +59,16 @@ jobs:
           paths:
             - vendor
 
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install NodeJS Packages
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+
       - run:
          name: Create SQLite Database
          command: touch database/database.sqlite
@@ -65,6 +76,15 @@ jobs:
       - run:
          name: Migrate Laravel Database
          command: php artisan migrate --env=testing --force
+
+      - run:
+         name: Compile Javascript & CSS for Browser Testing
+         command: npm run production
+
+      - run:
+         name: Start Chrome Driver
+         command: ./vendor/laravel/dusk/bin/chromedriver-linux
+         background: true
 
       - run:
          name: Run Laravel Server
