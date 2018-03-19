@@ -32,6 +32,11 @@ jobs:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.json" }}
+          
+      test:
+        override:
+          - "true"
+      
         
       # run tests!
       - run: phpunit
