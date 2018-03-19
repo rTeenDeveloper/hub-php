@@ -56,4 +56,7 @@ jobs:
       #- run: ./vendor/bin/phpunit
       #- run: ./vendor/bin/codecept build
       #- run: ./vendor/bin/codecept run
-      - run: phpunit
+
+test:
+  override:
+    - echo "write tests dante!!"
