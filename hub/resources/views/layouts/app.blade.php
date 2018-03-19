@@ -53,6 +53,9 @@
 
                                 <ul class="dropdown-menu">
                                     <li>
+                                        <a href="{{ route('user.profile', Auth::user()['username']) }}">Profile</a>
+                                    </li>
+                                    <li>
                                         <a href="{{ route('settings') }}">Settings</a>
                                     </li>
                                     <li>

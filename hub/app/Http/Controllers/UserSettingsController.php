@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use Validator;
 use Redirect;
+use Route;
+use Hash;
 
 class UserSettingsController extends Controller
 {
@@ -16,24 +18,56 @@ class UserSettingsController extends Controller
 
     public function index ()
     {
-    	return view('user.settings', ['user' => Auth::user()]);
+    	return view('user.settings.index', ['user' => Auth::user()]);
+    }
+
+    public function security ()
+    {
+    	return view('user.settings.security', ['user' => Auth::user()]);
     }
 
     public function update (Request $request)
     {
-    	$validator = Validator::make($request->all(), [
-    		'name' => 'required|string|max:255'
-    	]);
+    	$currentTab = explode('.', Route::current()->getName());
 
-    	if ($validator->fails())
-    		 return back()->withErrors($validator)->withInput();
+    	if (!isset($currentTab[1])) // 'profile' page
+    	{
+    			$validator = Validator::make($request->all(), [
+		    		'name' => 'required|string|max:255'
+		    	]);
 
-    	$user = User::find(Auth::id());
-    	$user->name = $request->name;
-    	$user->save();
+		    	if ($validator->fails())
+		    		 return back()->withErrors($validator)->withInput();
 
-    	// A redirect here is necessary, because Laravel updates its Auth::user() data every request,
-    	// so if we would just return a view here it would contain old (before update) data
-    	return Redirect::to('/settings')->with('message', 'Data successfully updated.');
+		    	$user = User::find(Auth::id());
+		    	$user->name = $request->name;
+		    	$user->save();
+
+		    	// A redirect here is necessary, because Laravel updates its Auth::user() data every request,
+		    	// so if we would just return a view here it would contain old (before update) data
+		    	return Redirect::to('/settings')->with('message', 'Data successfully updated.');
+    	}
+
+    	switch ($currentTab[1])
+    	{
+    		case 'security':
+		    	$validator = Validator::make($request->all(), [
+		    		'password' => 'required|string',
+		    		'new_password' => 'required|string|confirmed'
+		    	]);
+
+		    	if ($validator->fails())
+		    		 return back()->withErrors($validator);
+
+		    	if (!Hash::check($request->password, Auth::user()['password']))
+		    		return back()->withErrors(array('password' => 'Password is incorrect!'));
+		 
+		 		$user = User::find(Auth::id());
+		 		$user->password = Hash::make($request->new_password);
+		 		$user->save();
+
+		 		return Redirect::to('/settings/security')->with('message', 'Password successfully changed.');
+    		break;
+    	}
     }
 }

@@ -26,12 +26,25 @@ Route::get('/user/{username}', [
 	'uses' => 'UserProfileController@index'
 ]);
 
-Route::get('settings', [
-	'as' => 'settings',
-	'uses' => 'UserSettingsController@index'
-])->middleware('auth');
+Route::prefix('settings')->group(function(){
 
-Route::post('settings', [
-	'as' => 'settings',
-	'uses' => 'UserSettingsController@update'
-])->middleware('auth');
+	Route::get('/', [
+		'as' => 'settings',
+		'uses' => 'UserSettingsController@index'
+	])->middleware('auth');
+
+	Route::post('/', [
+		'as' => 'settings',
+		'uses' => 'UserSettingsController@update'
+	])->middleware('auth');
+
+	Route::get('/security', [
+		'as' => 'settings.security',
+		'uses' => 'UserSettingsController@security'
+	]);
+
+	Route::post('/security', [
+		'as' => 'settings.security',
+		'uses' => 'UserSettingsController@update'
+	]);
+});
