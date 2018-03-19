@@ -8,9 +8,9 @@
 
 <span>joined {{$user['created_at']->diffForHumans()}}</span><br>
 
-<span>{{$user['bio']}}</span>
-
 <span>Followers: {{count($user->followers)}}</span>
+
+<span>{{$user['bio']}}</span>
 
 @if (Auth::id() != $user['id'])
 	<div id="follow-btn-container">
