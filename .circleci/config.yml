@@ -42,7 +42,7 @@ jobs:
 
       - run:
          name: Setup Laravel testing environment variables for CircleCI test
-         command: cp hub/.env.testing hub/.env
+         command: cp ./hub/.env.testing ./hub/.env
 
       - run:
          name: Update composer to latest version
