@@ -132,13 +132,13 @@ class GithubController extends Controller
                         break;
                     case 'ForkEvent':
                         $activityParsed['forkee'] = array(
-                            'name' => $activity['forkee']['name'], 
+                            'name' => $activity['forkee']['name'],
                             'full_name' => $activity['forkee']['full_name']
                         );
                         break;
                     case 'IssueCommentEvent':
                         $activityParsed['issue'] = array(
-                            'url' => $activity['issue']['url'], 
+                            'url' => $activity['issue']['url'],
                             'title' => $activity['issue']['title']
                         );
                         break;
@@ -167,16 +167,16 @@ class GithubController extends Controller
                         break;
                     case 'PullRequestEvent':
                         $activityParsed['pull_request'] = array(
-                            'url' => $activity['pull_request']['url'], 
+                            'url' => $activity['pull_request']['url'],
                             'title' => $activity['pull_request']['title']
                         );
                         break;
                     case 'PullRequestReviewEvent':
                         $activityParsed['pull_request'] = array(
-                            'url' => $activity['pull_request']['url'], 
+                            'url' => $activity['pull_request']['url'],
                             'title' => $activity['pull_request']['title']
                         );
-                    break;
+                        break;
                     case 'PullRequestReviewCommentEvent':
                         $activityParsed['pull_request'] = array(
                             'url' => $activity['pull_request']['url'],
@@ -192,7 +192,7 @@ class GithubController extends Controller
                     case 'ReleaseEvent':
                         $activityParsed['release'] = array(
                             'url' => $activity['release']['url'],
-                            'name' => $activity['release']['name'], 
+                            'name' => $activity['release']['name'],
                             'tag_name' => $activity['release']['tag_name']
                         );
                         break;
