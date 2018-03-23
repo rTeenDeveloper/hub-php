@@ -1,22 +1,20 @@
-<?php 
+<?php
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
-
 namespace App;
 
-class Activity 
+class Activity
 {
 
-    private static function getUserActivity ($user)
+    private static function getUserActivity($user)
     {
         $activity = array();
 
         // we have to loop through all the integrations
-        $integrations = $user->integrations; 
-        foreach ($integrations as $key=>$integration)
-        {
+        $integrations = $user->integrations;
+        foreach ($integrations as $key => $integration) {
             new Http\Controllers\Integration\GithubController;
             $class = 'App\Http\Controllers\Integration\\' . ucfirst($key).'Controller';
             $object = new $class();
@@ -35,12 +33,12 @@ class Activity
         return $activity;
     }
 
-    public static function getActivity ($user, $refreshCache)
+    public static function getActivity($user, $refreshCache)
     {
-        if ($refreshCache == false)
-        {
-            if (\Cache::has('user_activity_' . $user->id))
+        if ($refreshCache == false) {
+            if (\Cache::has('user_activity_' . $user->id)) {
                 return \Cache::get('user_activity_' . $user->id);
+            }
         }
 
         $activity = Activity::getUserActivity($user);

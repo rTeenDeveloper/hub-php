@@ -59,11 +59,11 @@ class GithubController extends Controller
     }
 
     /**
-    * Get user activity 
+    * Get user activity
     *
     * @return mixed
     */
-    public static function getActivity ($username, $ETag='')
+    public static function getActivity($username, $ETag = '')
     {
         // More about ETag: https://en.wikipedia.org/wiki/HTTP_ETag
         $client = new \GuzzleHttp\Client();
@@ -72,16 +72,13 @@ class GithubController extends Controller
                 'If-None-Match: ' => $ETag
             )]*/);
 
-        if ($res->getStatusCode() == 304) // Nothing changed
-        {
+        if ($res->getStatusCode() == 304) { // Nothing changed
             return array();
-        }
-        elseif ($res->getStatusCode() == 200) // New activity
-        {
+        } elseif ($res->getStatusCode() == 200) { // New activity
             $ETag = $res->getHeader('ETag');
             $body = json_decode($res->getBody(), true);
 
-            /* 
+            /*
             Github divides user's activity in blocks, 10 commits in same repository will be in same block, 
             approved PR in other repository will be in other block. We don't want to get all user's activity,
             as it would quickly get tangled with more active users. Instead, we will just get actions type,
@@ -95,17 +92,16 @@ class GithubController extends Controller
             */
             $activityArray = array();
 
-            foreach ($body as $activity)
-            {
+            foreach ($body as $activity) {
                 $activityParsed = array();
 
                 $activityParsed['type'] = $activity['type'];
 
-                if (isset($activity['action']))
+                if (isset($activity['action'])) {
                     $activityParsed['action'] = $activity['action'];
+                }
 
-                if (isset($activity['repo']))
-                {
+                if (isset($activity['repo'])) {
                     $activityParsed['repo'] = array(
                         'name' => $activity['repo']['name']
                     );
@@ -113,58 +109,58 @@ class GithubController extends Controller
 
                 $activity = $activity['payload'];
 
-                if (isset($activity['url']))
+                if (isset($activity['url'])) {
                     $activityParsed['url'] = $activity['url'];
+                }
 
-                switch ($activityParsed['type'])
-                {
+                switch ($activityParsed['type']) {
                     case 'CommitCommentEvent':
                         $activityParsed['user'] = array('avatar' => $activity['comment']['user']['avatar_url']);
                         $activityParsed['body'] = $activity['comment']['body'];
-                    break;
+                        break;
                     case 'CreateEvent':
                         $activityParsed['ref_type'] = $activity['ref_type'];
                         $activityParsed['ref'] = $activity['ref'];
-                    break;
+                        break;
                     case 'DeleteEvent':
                         $activityParsed['ref_type'] = $activity['ref_type'];
                         $activityParsed['ref'] = $activity['ref'];
-                    break;
+                        break;
                     case 'ForkEvent':
                         $activityParsed['forkee'] = array('name' => $activity['forkee']['name'], 'full_name' => $activity['forkee']['full_name']);
-                    break;
+                        break;
                     case 'IssueCommentEvent':
                         $activityParsed['issue'] = array('url' => $activity['issue']['url'], 'title' => $activity['issue']['title']);
-                    break;
+                        break;
                     case 'IssuesEvent':
                         $activityParsed['issue'] = array('url' => $activity['issue']['url'], 'title' => $activity['issue']['title']);
-                    break;
+                        break;
                     case 'MarketplacePurchaseEvent':
                         $activityParsed['action'] = $activity['action'];
                         $activityParsed['marketplace_purchase'] = $activity['marketplace_purchase'];
-                    break;
+                        break;
                     case 'MemberEvent':
                         $activityParsed['member'] = array('username' => $activity['member']['login'], 'url' => $activity['member']['html_url']);
-                    break;
+                        break;
                     case 'ProjectEvent':
                         $activityParsed['project'] = array('name' => $activity['project']['name'], 'body' => $activity['project']['body']);
-                    break;
+                        break;
                     case 'PullRequestEvent':
                         $activityParsed['pull_request'] = array('url' => $activity['pull_request']['url'], 'title' => $activity['pull_request']['title']);
-                    break;
+                        break;
                     case 'PullRequestReviewEvent':
                         $activityParsed['pull_request'] = array('url' => $activity['pull_request']['url'], 'title' => $activity['pull_request']['title']);
-                    break;
+                        break;
                     case 'PullRequestReviewCommentEvent':
                         $activityParsed['pull_request'] = array('url' => $activity['pull_request']['url'], 'title' => $activity['pull_request']['title']);
                         $activityParsed['comment'] = array('body' => $activity['comment']['body']);
-                    break;
+                        break;
                     case 'PushEvent':
                         $activityParsed['commits_count'] = $activity['distinct_size'];
-                    break;
+                        break;
                     case 'ReleaseEvent':
                         $activityParsed['release'] = array('url' => $activity['release']['url'], 'name' => $activity['release']['name'], 'tag_name' => $activity['release']['tag_name']);
-                    break;
+                        break;
                 }
                 $activityArray[] = $activityParsed;
             }

@@ -6,7 +6,7 @@ use App\Activity;
 
 trait HasActivity
 {
-    public function getActivity ($refreshCache=false) 
+    public function getActivity($refreshCache = false)
     {
         return Activity::getActivity($this, $refreshCache);
     }
