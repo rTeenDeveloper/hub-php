@@ -39,7 +39,8 @@ class GithubController extends Controller
         $userModel->integrations = $integrations;
         $userModel->save();
 
-        return Redirect::route('settings.integrations')->with('message', 'Integration was successfully added to your profile!');
+        return Redirect::route('settings.integrations')
+        ->with('message', 'Integration was successfully added to your profile!');
     }
 
     /**
