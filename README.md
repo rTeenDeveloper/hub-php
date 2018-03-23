@@ -1,4 +1,4 @@
-# rTeenDeveloper Hub
+# rTeenDeveloper Hub [![CircleCI](https://circleci.com/gh/rTeenDeveloper/hub-php.svg?style=svg)](https://circleci.com/gh/rTeenDeveloper/hub-php)
 
 A place where all the teenage developers could feel like at home
 
