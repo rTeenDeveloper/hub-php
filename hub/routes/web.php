@@ -65,16 +65,13 @@ Route::prefix('settings')->group(function () {
 Route::prefix('integration')->group(function () {
 
     Route::get('/github', 'Integration\GithubController@redirectToProvider')->middleware('auth');
-    ;
 
     Route::get('/github/callback', [
         'as' => 'integration.github',
         'uses' => 'Integration\GithubController@handleProviderCallback'
     ])->middleware('auth');
-    ;
 
     Route::post('/github/remove', [
         'uses' => 'Integration\GithubController@removeIntegration'
     ])->middleware('auth');
-    ;
 });
