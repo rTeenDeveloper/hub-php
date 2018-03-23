@@ -115,7 +115,10 @@ class GithubController extends Controller
 
                 switch ($activityParsed['type']) {
                     case 'CommitCommentEvent':
-                        $activityParsed['user'] = array('avatar' => $activity['comment']['user']['avatar_url']);
+                        $activityParsed['user'] = array(
+                            'avatar' => $activity['comment']['user']['avatar_url']
+                        );
+
                         $activityParsed['body'] = $activity['comment']['body'];
                         break;
                     case 'CreateEvent':
@@ -127,39 +130,70 @@ class GithubController extends Controller
                         $activityParsed['ref'] = $activity['ref'];
                         break;
                     case 'ForkEvent':
-                        $activityParsed['forkee'] = array('name' => $activity['forkee']['name'], 'full_name' => $activity['forkee']['full_name']);
+                        $activityParsed['forkee'] = array(
+                            'name' => $activity['forkee']['name'], 
+                            'full_name' => $activity['forkee']['full_name']
+                        );
                         break;
                     case 'IssueCommentEvent':
-                        $activityParsed['issue'] = array('url' => $activity['issue']['url'], 'title' => $activity['issue']['title']);
+                        $activityParsed['issue'] = array(
+                            'url' => $activity['issue']['url'], 
+                            'title' => $activity['issue']['title']
+                        );
                         break;
                     case 'IssuesEvent':
-                        $activityParsed['issue'] = array('url' => $activity['issue']['url'], 'title' => $activity['issue']['title']);
+                        $activityParsed['issue'] = array(
+                            'url' => $activity['issue']['url'],
+                            'title' => $activity['issue']['title']
+                        );
+
                         break;
                     case 'MarketplacePurchaseEvent':
                         $activityParsed['action'] = $activity['action'];
                         $activityParsed['marketplace_purchase'] = $activity['marketplace_purchase'];
                         break;
                     case 'MemberEvent':
-                        $activityParsed['member'] = array('username' => $activity['member']['login'], 'url' => $activity['member']['html_url']);
+                        $activityParsed['member'] = array(
+                            'username' => $activity['member']['login'],
+                            'url' => $activity['member']['html_url']
+                         );
                         break;
                     case 'ProjectEvent':
-                        $activityParsed['project'] = array('name' => $activity['project']['name'], 'body' => $activity['project']['body']);
+                        $activityParsed['project'] = array(
+                            'name' => $activity['project']['name'],
+                            'body' => $activity['project']['body']
+                        );
                         break;
                     case 'PullRequestEvent':
-                        $activityParsed['pull_request'] = array('url' => $activity['pull_request']['url'], 'title' => $activity['pull_request']['title']);
+                        $activityParsed['pull_request'] = array(
+                            'url' => $activity['pull_request']['url'], 
+                            'title' => $activity['pull_request']['title']
+                        );
                         break;
                     case 'PullRequestReviewEvent':
-                        $activityParsed['pull_request'] = array('url' => $activity['pull_request']['url'], 'title' => $activity['pull_request']['title']);
-                        break;
+                        $activityParsed['pull_request'] = array(
+                            'url' => $activity['pull_request']['url'], 
+                            'title' => $activity['pull_request']['title']
+                        );
+                    break;
                     case 'PullRequestReviewCommentEvent':
-                        $activityParsed['pull_request'] = array('url' => $activity['pull_request']['url'], 'title' => $activity['pull_request']['title']);
-                        $activityParsed['comment'] = array('body' => $activity['comment']['body']);
+                        $activityParsed['pull_request'] = array(
+                            'url' => $activity['pull_request']['url'],
+                            'title' => $activity['pull_request']['title']
+                        );
+                        $activityParsed['comment'] = array(
+                            'body' => $activity['comment']['body']
+                        );
                         break;
                     case 'PushEvent':
                         $activityParsed['commits_count'] = $activity['distinct_size'];
                         break;
                     case 'ReleaseEvent':
-                        $activityParsed['release'] = array('url' => $activity['release']['url'], 'name' => $activity['release']['name'], 'tag_name' => $activity['release']['tag_name']);
+                        $activityParsed['release'] = array(
+                            'url' => $activity['release']['url'],
+                            'name' => $activity['release']['name'], 
+                            'tag_name' => $activity['release']['tag_name']
+                        );
                         break;
                 }
                 $activityArray[] = $activityParsed;
