@@ -8,9 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Overtrue\LaravelFollow\Traits\CanFollow;
 use Overtrue\LaravelFollow\Traits\CanBeFollowed;
 
+use App\Traits\HasActivity;
+
 class User extends Authenticatable
 {
-    use Notifiable, CanFollow, CanBeFollowed;
+    use Notifiable, CanFollow, CanBeFollowed, HasActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'bio',
+        'name', 'username', 'email', 'password', 'integrations', 'bio',
     ];
 
     /**
@@ -28,5 +30,9 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+    ];
+
+    protected $casts = [
+        'integrations' => 'array'
     ];
 }

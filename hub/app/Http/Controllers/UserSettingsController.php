@@ -26,6 +26,11 @@ class UserSettingsController extends Controller
     	return view('user.settings.security', ['user' => Auth::user()]);
     }
 
+    public function integrations ()
+    {
+        return view('user.settings.integrations');
+    }
+
     public function update (Request $request)
     {
     	$currentTab = explode('.', Route::current()->getName());

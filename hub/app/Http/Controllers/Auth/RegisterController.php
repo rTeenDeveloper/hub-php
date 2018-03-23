@@ -68,6 +68,9 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'integrations' => '{}', /* why? because mysql sucks, that's why. delete this and you get 
+            'field 'integrations' doesn't have a default value', but if you set default value...
+            boom! COLUMN TYPE JSON CAN'T HAVE A DEFAULT VALUE. fuck you, oracle */
         ]);
     }
 }

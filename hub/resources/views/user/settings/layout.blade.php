@@ -17,6 +17,7 @@
                     <ul class="nav nav-pills nav-stacked">
                         <li role="presentation" {{ Route::current()->getName() == 'settings' ? 'class=active' : '' }}><a href="{{ route('settings') }}">Profile</a></li>
                         <li role="presentation" {{ Route::current()->getName() == 'settings.security' ? 'class=active' : '' }}><a href="{{ route('settings.security') }}">Security</a></li>
+                        <li role="presentation" {{ Route::current()->getName() == 'settings.integrations' ? 'class=active' : '' }}><a href="{{ route('settings.integrations') }}">Integrations</a></li>
                     </ul>
 
         			@yield('container')

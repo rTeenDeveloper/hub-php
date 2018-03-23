@@ -55,4 +55,24 @@ Route::prefix('settings')->group(function(){
 		'as' => 'settings.security',
 		'uses' => 'UserSettingsController@update'
 	]);
+
+	Route::get('/integrations', [
+		'as' => 'settings.integrations',
+		'uses' => 'UserSettingsController@integrations'
+	]);
+});
+
+Route::prefix('integration')->group(function(){
+
+	Route::get('/github', 'Integration\GithubController@redirectToProvider')->middleware('auth');;
+
+	Route::get('/github/callback', [
+		'as' => 'integration.github',
+		'uses' => 'Integration\GithubController@handleProviderCallback'
+	])->middleware('auth');;
+
+	Route::post('/github/remove', [
+		'uses' => 'Integration\GithubController@removeIntegration'
+	])->middleware('auth');;
+
 });
