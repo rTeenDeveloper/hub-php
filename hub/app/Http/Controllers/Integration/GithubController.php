@@ -68,13 +68,13 @@ class GithubController extends Controller
     {
         // More about ETag: https://en.wikipedia.org/wiki/HTTP_ETag
         $client = new \GuzzleHttp\Client();
-        $res = $client->get('https://api.github.com/users/' . $username . '/events'/*, [
+        $res = $client->get('https://api.github.com/users/' . $username . '/events', [
             'headers' => array(
-                'If-None-Match: ' => $ETag
-            )]*/);
+                'If-None-Match' => $ETag
+            )]);
 
         if ($res->getStatusCode() == 304) { // Nothing changed
-            return array();
+            return array('ETag' => $res->getHeader('ETag'), 'activity' => array());
         } elseif ($res->getStatusCode() == 200) { // New activity
             $ETag = $res->getHeader('ETag');
             $body = json_decode($res->getBody(), true);
@@ -103,10 +103,13 @@ class GithubController extends Controller
                 }
 
                 if (isset($activity['repo'])) {
-                    $activityParsed['repo'] = array(
+                    $activityParsed['data']['repo'] = array(
                         'name' => $activity['repo']['name']
                     );
                 }
+
+                if (isset($activity['created_at']))
+                    $activityParsed['created_at'] = $activity['created_at'];
 
                 $activity = $activity['payload'];
 
@@ -116,81 +119,80 @@ class GithubController extends Controller
 
                 switch ($activityParsed['type']) {
                     case 'CommitCommentEvent':
-                        $activityParsed['user'] = array(
+                        $activityParsed['data']['user'] = array(
                             'avatar' => $activity['comment']['user']['avatar_url']
                         );
 
-                        $activityParsed['body'] = $activity['comment']['body'];
+                        $activityParsed['data']['body'] = $activity['comment']['body'];
                         break;
                     case 'CreateEvent':
-                        $activityParsed['ref_type'] = $activity['ref_type'];
-                        $activityParsed['ref'] = $activity['ref'];
+                        $activityParsed['data']['ref_type'] = $activity['ref_type'];
+                        $activityParsed['data']['ref'] = $activity['ref'];
                         break;
                     case 'DeleteEvent':
-                        $activityParsed['ref_type'] = $activity['ref_type'];
-                        $activityParsed['ref'] = $activity['ref'];
+                        $activityParsed['data']['ref_type'] = $activity['ref_type'];
+                        $activityParsed['data']['ref'] = $activity['ref'];
                         break;
                     case 'ForkEvent':
-                        $activityParsed['forkee'] = array(
+                        $activityParsed['data']['forkee'] = array(
                             'name' => $activity['forkee']['name'],
                             'full_name' => $activity['forkee']['full_name']
                         );
                         break;
                     case 'IssueCommentEvent':
-                        $activityParsed['issue'] = array(
+                        $activityParsed['data']['issue'] = array(
                             'url' => $activity['issue']['url'],
                             'title' => $activity['issue']['title']
                         );
                         break;
                     case 'IssuesEvent':
-                        $activityParsed['issue'] = array(
+                        $activityParsed['data']['issue'] = array(
                             'url' => $activity['issue']['url'],
                             'title' => $activity['issue']['title']
                         );
 
                         break;
                     case 'MarketplacePurchaseEvent':
-                        $activityParsed['action'] = $activity['action'];
-                        $activityParsed['marketplace_purchase'] = $activity['marketplace_purchase'];
+                        $activityParsed['data']['marketplace_purchase'] = $activity['marketplace_purchase'];
                         break;
                     case 'MemberEvent':
-                        $activityParsed['member'] = array(
+                        $activityParsed['data']['member'] = array(
                             'username' => $activity['member']['login'],
                             'url' => $activity['member']['html_url']
                          );
                         break;
                     case 'ProjectEvent':
-                        $activityParsed['project'] = array(
+                        $activityParsed['data']['project'] = array(
                             'name' => $activity['project']['name'],
                             'body' => $activity['project']['body']
                         );
                         break;
                     case 'PullRequestEvent':
-                        $activityParsed['pull_request'] = array(
+                        $activityParsed['data']['pull_request'] = array(
                             'url' => $activity['pull_request']['url'],
                             'title' => $activity['pull_request']['title']
                         );
                         break;
                     case 'PullRequestReviewEvent':
-                        $activityParsed['pull_request'] = array(
+                        $activityParsed['data']['pull_request'] = array(
                             'url' => $activity['pull_request']['url'],
                             'title' => $activity['pull_request']['title']
                         );
                         break;
                     case 'PullRequestReviewCommentEvent':
-                        $activityParsed['pull_request'] = array(
+                        $activityParsed['data']['pull_request'] = array(
                             'url' => $activity['pull_request']['url'],
                             'title' => $activity['pull_request']['title']
                         );
-                        $activityParsed['comment'] = array(
+                        $activityParsed['data']['comment'] = array(
                             'body' => $activity['comment']['body']
                         );
                         break;
                     case 'PushEvent':
-                        $activityParsed['commits_count'] = $activity['distinct_size'];
+                        $activityParsed['data']['commits_count'] = $activity['distinct_size'];
                         break;
                     case 'ReleaseEvent':
-                        $activityParsed['release'] = array(
+                        $activityParsed['data']['release'] = array(
                             'url' => $activity['release']['url'],
                             'name' => $activity['release']['name'],
                             'tag_name' => $activity['release']['tag_name']

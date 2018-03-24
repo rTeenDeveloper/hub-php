@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use ActivityModel;
 
 namespace App;
 
@@ -28,7 +29,17 @@ class Activity
             $user->integrations = $integrations;
             $user->save();
 
-            $activity[] = array('provider' => $key, 'activity' => $integrationActivity['activity']);
+            foreach ($integrationActivity['activity'] as $activity)
+            {
+                $activityModel = new ActivityModel;
+                $activityModel->uid = $user->id;
+                $activityModel->provider = $key;
+                $activityModel->created_at = date("Y-m-d", strtotime($activity['created_at']));
+                $activityModel->data = json_encode($activity['data']);
+                $activityModel->save();
+            }
+
+            $activity[$key] = $integrationActivity['activity'];
         }
         return $activity;
     }

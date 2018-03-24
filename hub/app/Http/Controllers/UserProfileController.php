@@ -15,6 +15,7 @@ class UserProfileController extends Controller
     public function index($username)
     {
         $user = User::where('username', $username)->firstOrFail();
+        echo '<pre>'; die(print_r($user->getActivity())); echo '</pre>';
         return view('user.profile', ['user' => $user]);
     }
 
