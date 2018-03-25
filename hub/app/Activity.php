@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use ActivityModel;
+use App\ActivityModel;
 
 namespace App;
 
@@ -51,11 +51,21 @@ class Activity
                 return \Cache::get('user_activity_' . $user->id);
             }
         }
+        else 
+        {
+            // we need to get user activity again directly from the providers 
+            $activity = Activity::getUserActivity($user);
+            \Cache::put('user_activity_' . $user->id, $activity, now()->addMinutes(30));
+            return $activity;
+        }
 
-        $activity = Activity::getUserActivity($user);
+        // we don't want to refresh cache, but there is no particular user activity in the cache, so 
+        // we have to get it from the database and save to the cache
 
-        \Cache::put('user_activity_' . $user->id, $activity, now()->addMinutes(30));
+        \Cache::remember('user_activity_' . $user->id, 30, function() use ($user) {
+            return ActivityModel::where('uid', $user->id)->get()->toArray();
+        });
 
-        return $activity;
+        return \Cache::get('user_activity_' . $user->id);
     }
 }
