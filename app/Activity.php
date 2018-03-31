@@ -36,7 +36,7 @@ class Activity
                 $activityModel->provider = $key;
                 $activityModel->type = isset($activity['type']) ? $activity['type'] : '';
                 $activityModel->action = isset($activity['action']) ? $activity['action'] : '';
-                $activityModel->created_at = date("Y-m-d", strtotime($activity['created_at']));
+                $activityModel->created_at = date("Y-m-d h:i:s", strtotime($activity['created_at']));
                 $activityModel->data = json_encode($activity['data']);
                 $activityModel->save();
             }
@@ -56,8 +56,13 @@ class Activity
         else 
         {
             // we need to get user activity again directly from the providers 
-            $activity = Activity::getUserActivity($user);
+
+            // first we will get current activity (we want to get all activity, not only the latest)
+            $activityHistory = ActivityModel::where('uid', $user->id)->get()->toArray();
+    
+            $activity = array_merge($activityHistory, Activity::getUserActivity($user));
             \Cache::put('user_activity_' . $user->id, $activity, now()->addMinutes(30));
+
             return $activity;
         }
 
@@ -68,6 +73,6 @@ class Activity
             return ActivityModel::where('uid', $user->id)->get()->toArray();
         });
 
-        return ActivityModel::where('uid', $user->id)->get()->toArray();
+        return \Cache::get('user_activity_'. $user->id);
     }
 }
