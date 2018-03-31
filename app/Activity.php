@@ -53,26 +53,15 @@ class Activity
                 return \Cache::get('user_activity_' . $user->id);
             }
         }
-        else 
-        {
-            // we need to get user activity again directly from the providers 
 
-            // first we will get current activity (we want to get all activity, not only the latest)
-            $activityHistory = ActivityModel::where('uid', $user->id)->get()->toArray();
+        // we need to get user activity again directly from the providers 
+
+        // first we will get current activity (we want to get all activity, not only the latest)
+        $activityHistory = ActivityModel::where('uid', $user->id)->get()->toArray();
     
-            $activity = array_merge($activityHistory, Activity::getUserActivity($user));
-            \Cache::put('user_activity_' . $user->id, $activity, now()->addMinutes(30));
+        $activity = array_merge($activityHistory, Activity::getUserActivity($user));
+        \Cache::put('user_activity_' . $user->id, $activity, now()->addMinutes(30));
 
-            return $activity;
-        }
-
-        // we don't want to refresh cache, but there is no particular user activity in the cache, so 
-        // we have to get it from the database and save to the cache
-
-        \Cache::remember('user_activity_' . $user->id, 30, function() use ($user) {
-            return ActivityModel::where('uid', $user->id)->get()->toArray();
-        });
-
-        return \Cache::get('user_activity_'. $user->id);
+        return $activity;
     }
 }
