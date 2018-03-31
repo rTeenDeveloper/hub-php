@@ -68,10 +68,12 @@ class GithubController extends Controller
     {
         // More about ETag: https://en.wikipedia.org/wiki/HTTP_ETag
         $client = new \GuzzleHttp\Client();
-        $res = $client->get('https://api.github.com/users/' . $username . '/events', [
-            'headers' => array(
-                'If-None-Match' => $ETag
-            )]);
+        $headers = array();
+
+        if ($ETag != '')
+            $headers['If-None-Match'] = $ETag;
+
+        $res = $client->get('https://api.github.com/users/' . $username . '/events', array('headers' => $headers));
 
         if ($res->getStatusCode() == 304) { // Nothing changed
             return array('ETag' => $res->getHeader('ETag'), 'activity' => array());

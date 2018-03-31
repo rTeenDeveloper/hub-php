@@ -17,6 +17,8 @@ class CreateActivityTable extends Migration
             $table->increments('id');
             $table->integer('uid');
             $table->string('provider');
+            $table->string('type');
+            $table->string('action');
             $table->json('data');
             $table->timestamp('created_at');
         });

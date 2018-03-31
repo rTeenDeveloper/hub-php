@@ -34,6 +34,8 @@ class Activity
                 $activityModel = new ActivityModel;
                 $activityModel->uid = $user->id;
                 $activityModel->provider = $key;
+                $activityModel->type = isset($activity['type']) ? $activity['type'] : '';
+                $activityModel->action = isset($activity['action']) ? $activity['action'] : '';
                 $activityModel->created_at = date("Y-m-d", strtotime($activity['created_at']));
                 $activityModel->data = json_encode($activity['data']);
                 $activityModel->save();
@@ -66,6 +68,6 @@ class Activity
             return ActivityModel::where('uid', $user->id)->get()->toArray();
         });
 
-        return \Cache::get('user_activity_' . $user->id);
+        return ActivityModel::where('uid', $user->id)->get()->toArray();
     }
 }
