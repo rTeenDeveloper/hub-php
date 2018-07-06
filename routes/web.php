@@ -15,8 +15,6 @@ Route::get('/', 'WallController@index')->name('wall');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 // User profiles
 
 Route::prefix('/user/{username}')->group(function () {

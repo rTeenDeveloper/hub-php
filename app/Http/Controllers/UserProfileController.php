@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Activity;
 use Auth;
 
 class UserProfileController extends Controller
@@ -15,7 +16,7 @@ class UserProfileController extends Controller
     public function index($username)
     {
         $user = User::where('username', $username)->firstOrFail();
-        return view('user.profile', ['user' => $user]);
+        return view('user.profile', ['user' => $user, 'activity' => $user->getActivity()]);
     }
 
     public function follow($username)

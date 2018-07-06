@@ -11,6 +11,6 @@ class ActivityModel extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'integrations' => 'array'
+        'data' => 'array'
     ];
 }

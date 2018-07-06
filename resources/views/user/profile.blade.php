@@ -24,7 +24,7 @@
 
     <h2>Activity</h2>
     <ul>
-    @foreach ($user->getActivity() as $activity)
+    @foreach ($activity as $activity)
         {{ print_r($activity) }}
     @endforeach
     </ul>
