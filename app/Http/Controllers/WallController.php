@@ -15,7 +15,7 @@ class WallController extends Controller
 
     public function index()
     {
-        return view('wall', array('entries' => Entry::all()->orderBy('id', 'desc')));
+        return view('wall', array('entries' => Entry::all()));
     }
 
     public function store (Request $request)
