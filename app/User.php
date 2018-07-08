@@ -35,4 +35,12 @@ class User extends Authenticatable
     protected $casts = [
         'integrations' => 'array'
     ];
+
+    /**
+    * Get user entries on blog
+    */
+    public function posts ()
+    {
+        return $this->hasMany('App\Entry');
+    }
 }

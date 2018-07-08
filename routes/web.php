@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'WallController@index')->name('wall');
+Route::post('/', 'WallController@store');
 
 Auth::routes();
 
